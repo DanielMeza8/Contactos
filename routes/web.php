@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\ChartController;
 use App\Http\Controllers\CrudController;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
@@ -24,12 +25,20 @@ Route::get('/registro', function () {
     return view('registro');
 });
 
+Route::get('/graficaPie', [ChartController::class, 'pieChart']);
+// Route::get('/g', function() {
+//     return view('grafica');
+// });
+
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('/login', [LoginController::class, 'login'])->name('iniciar');
 
 // Route::get('/inicio', function () {
 //     return view('inicio');
 // });
+// Route::get('/grafica', [ChartController::class, 'index'])->name('chart.inicio');
+//Route::get('/grafica-pastel', [ChartController::class, 'pieChart']);
+
 
 Route::post('/validar_registro', [LoginController::class, 'registro'])->name('validar_registro');
 
@@ -41,6 +50,7 @@ Route::prefix('contactos')->group(function(){
     Route::put('/actualizar/{id}', [CrudController::class, 'update'])->name('contactos.update');
     Route::get('/eliminar/{id}', [CrudController::class, 'show'])->name('contactos.show');
     Route::delete('/destruir/{id}', [CrudController::class, 'destroy'])->name('contactos.destroy');
+    
 });
 
 Route::prefix('categoria')->group(function(){

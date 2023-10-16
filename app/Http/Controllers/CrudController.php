@@ -8,17 +8,37 @@ use App\Models\Categoria;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use ConsoleTVs\Charts\Classes\Chartjs\Chart;
+use DB;
+
 
 class CrudController extends Controller
+
 {
-    public function index() {
+
+    public function pieChart(Request $request){
+    // Obtén los datos de la tabla SQL según la selección del campo
+    
+
+    return view('contactos/inicio', compact('chart'));
+    }
+
+
+
+    public function index(Request $request) {
         // el metodo index se usa para mostrar la pagina principal del crud
         $user = Auth::user();
         $userID = $user->id;
+        $data = Contactos::select('categoriaContacto', Contactos::raw('count(categoriaContacto) as total'))
+        ->groupBy('categoriaContacto')
+        ->get();
 
+        $chart = new Chart;
+        $chart->labels($data->pluck('categoriaContacto')); // Etiquetas para las secciones del pastel
+        $chart->dataset('Mi Gráfica de Pastel', 'pie', $data->pluck('total')); // Datos del paste
 
         $contactos = Contactos::where('creadoPor','=',$userID)->get();
-        return view("contactos/inicio", compact('contactos'));
+        return view("contactos/inicio", compact('contactos', 'chart'));
     }
 
     public function create() {
